@@ -69,13 +69,13 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage("Configurar alarma")
                 .setTitle(R.string.dialog_title)
-                .setPositiveButton(R.string.dialog_positive, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                     }
                 })
-                .setNegativeButton(R.string.dialog_negative, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 

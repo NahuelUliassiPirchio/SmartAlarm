@@ -39,6 +39,7 @@ public class MainAlarm extends Fragment {
             }
         }
 
+
         final View view = inflater.inflate(R.layout.fragment_main_alarm, container, false);
         alarmRecycler = view.findViewById(R.id.alarm_recycler);
         alarmAdapter = new AlarmAdapter(view.getContext(),alarmList);
