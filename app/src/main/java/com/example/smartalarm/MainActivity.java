@@ -1,6 +1,7 @@
 package com.example.smartalarm;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -10,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -59,17 +61,15 @@ public class MainActivity extends AppCompatActivity {
                 if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 } else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                recreate();
-                break;
             case R.id.action_about:
                 break;
             case R.id.action_settings:
                 startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
                 break;
         }
-
         return super.onOptionsItemSelected(item);
     }
+    
 
     @Override
     public void onActivityResult(int requestCode,
@@ -82,5 +82,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
 
 }

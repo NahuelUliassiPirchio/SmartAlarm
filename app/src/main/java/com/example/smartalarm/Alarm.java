@@ -1,8 +1,11 @@
 package com.example.smartalarm;
 
+import androidx.room.PrimaryKey;
+
 import java.time.OffsetTime;
 
 public class Alarm {
+    
     private String time;
     private String name;
     private boolean isOn;

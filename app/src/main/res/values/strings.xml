@@ -16,12 +16,12 @@
     <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
+    <string name="environment_header">Environment</string>
     <string name="sync_header">Sync</string>
 
     <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
+    <string name="theme_title">Theme</string>
+    <string name="time_title">Time format</string>
 
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
@@ -40,4 +40,5 @@
 
     <string name="colon">:</string>
     <string name="seconds_default">00</string>
+
 </resources>
