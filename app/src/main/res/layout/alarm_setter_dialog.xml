@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:paddingStart="@dimen/setter_padding"
+    android:paddingTop="@dimen/setter_padding"
+    android:paddingEnd="@dimen/setter_padding">
+
+    <TextView
+        android:id="@+id/dialog_alarm_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--android:maxLength="2"-->
+    <EditText
+        android:id="@+id/hour_dialog_setter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="2"
+        app:layout_constraintBottom_toTopOf="@+id/more_dialog_button"
+        app:layout_constraintEnd_toStartOf="@+id/minute_dialog_setter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/minute_dialog_setter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="2"
+        android:maxLength="2"
+        app:layout_constraintBottom_toTopOf="@+id/more_dialog_button"
+        app:layout_constraintEnd_toStartOf="@+id/second_dialog_setter"
+        app:layout_constraintStart_toEndOf="@+id/hour_dialog_setter"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/second_dialog_setter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="2"
+        android:maxLength="2"
+        app:layout_constraintBottom_toTopOf="@+id/more_dialog_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/minute_dialog_setter"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/done_dialog_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@color/colorAccent"
+        android:text="@string/done"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/more_dialog_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/setter_padding"
+        android:layout_marginBottom="10dp"
+        android:background="@color/transparent"
+        android:text="MORE OPTIONS"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/done_dialog_button" />
+</androidx.constraintlayout.widget.ConstraintLayout>

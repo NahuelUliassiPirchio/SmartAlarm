@@ -1,32 +1,20 @@
 package com.example.smartalarm;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.View;
-
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
-
-import java.time.OffsetTime;
-import java.time.ZoneOffset;
-import java.util.LinkedList;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
     public static final int TEXT_REQUEST = 1;
+    private MainAlarm mainAlarmFragment = new MainAlarm();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_alarm_fragment, mainAlarmFragment).commit();
 
         FloatingActionButton addAlarmFab = findViewById(R.id.fab);
         addAlarmFab.setOnClickListener(new View.OnClickListener() {
@@ -64,12 +54,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_about:
                 break;
             case R.id.action_settings:
-                startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
-    
 
     @Override
     public void onActivityResult(int requestCode,
@@ -77,11 +66,9 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == TEXT_REQUEST) {
             if (resultCode == RESULT_OK) {
-                boolean result = data.getBooleanExtra(NewAlarm.EXTRA_REPLY,false);
-                Toast.makeText(this,String.valueOf(result),Toast.LENGTH_SHORT).show();
+                if (data.getBooleanExtra(NewAlarm.EXTRA_REPLY, false))
+                    mainAlarmFragment.update();
             }
         }
     }
-
-
 }

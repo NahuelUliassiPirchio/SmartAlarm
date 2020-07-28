@@ -6,5 +6,6 @@
     <color name="darkView">#FFF2F1</color>
     <color name="white">#FFF2F1</color>
     <color name="cancelColor">#FF1200</color>
+    <color name="transparent" />
 
 </resources>

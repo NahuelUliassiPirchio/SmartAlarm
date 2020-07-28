@@ -2,4 +2,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="name_item_size">21sp</dimen>
     <dimen name="setter_margin">16dp</dimen>
+    <dimen name="setter_padding">16dp</dimen>
 </resources>

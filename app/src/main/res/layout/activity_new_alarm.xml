@@ -57,15 +57,16 @@
             app:layout_constraintEnd_toStartOf="@+id/second_setter"
             app:layout_constraintStart_toEndOf="@+id/minute_setter"
             app:layout_constraintTop_toTopOf="parent" />
+
         <EditText
             android:id="@+id/second_setter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/seconds_default"
             android:ems="2"
             android:gravity="center"
             android:inputType="number"
             android:maxLength="2"
+            android:text="@string/seconds_default"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/minute_setter"
@@ -83,6 +84,7 @@
         app:layout_constraintTop_toBottomOf="@id/time_setter">
 
         <EditText
+            android:id="@+id/name_setter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/setter_margin"
@@ -98,8 +100,8 @@
             android:layout_marginStart="@dimen/setter_margin"
             android:layout_marginTop="@dimen/setter_margin"
             android:layout_marginEnd="@dimen/setter_margin"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <ToggleButton
                 android:id="@+id/monday_toggle"
@@ -163,35 +165,41 @@
                 android:textOff="@string/sunday_char"
                 android:textOn="@string/sunday_char" />
         </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/setter_margin"
-        android:gravity="center">
-        <TextView
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="It's going to ring"/>
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="2"
-            android:inputType="number"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="more time, every"/>
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="2"
-            android:inputType="number"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="minutes"/>
-    </LinearLayout>
+            android:layout_marginTop="@dimen/setter_margin"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="It's going to ring" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="2"
+                android:inputType="number" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="more time, every" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="2"
+                android:inputType="number" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="minutes" />
+        </LinearLayout>
     </LinearLayout>
 
     <Button

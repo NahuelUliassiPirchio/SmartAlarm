@@ -1,25 +1,29 @@
 package com.example.smartalarm;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import java.util.LinkedList;
+import java.util.List;
 
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
-    private final LinkedList<Alarm> alarmList;
+    private final List<Alarm> alarmList;
     private Context context;
+    private AlarmDataBase dataBase;
 
-    public AlarmAdapter(Context context, LinkedList<Alarm> alarmList) {
+    public AlarmAdapter(Context context, List<Alarm> alarmList) {
         this.alarmList = alarmList;
         this.context = context;
     }
@@ -33,6 +37,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull AlarmAdapter.ViewHolder holder, int position) {
         Alarm currentAlarm = alarmList.get(position);
+        dataBase = AlarmDataBase.getInstance(context);
         holder.bindTo(currentAlarm);
     }
 
@@ -54,33 +59,48 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
             itemView.setOnClickListener(this);
         }
 
-        void bindTo(Alarm currentAlarm) {
+        void bindTo(final Alarm currentAlarm) {
             alarmNameTextView.setText(currentAlarm.getName());
             alarmOnSwitch.setChecked(currentAlarm.isOn());
             alarmTimeTextView.setText(currentAlarm.getTime());
+
+            alarmOnSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    currentAlarm.setOn(b);
+                    dataBase.alarmDao().update(currentAlarm);
+                    notifyDataSetChanged();
+                }
+            });
         }
 
         @Override
         public void onClick(View view) {
-            dialog(view.getContext());
+            final Alarm editedAlarm = alarmList.get(getAdapterPosition());
+
+            String alarmName = editedAlarm.getName();
+            String alarmTime = editedAlarm.getTime();
+
+            final Dialog alarmSetterDialog = new Dialog(context);
+            alarmSetterDialog.setContentView(R.layout.alarm_setter_dialog);
+
+            TextView dialogName = alarmSetterDialog.findViewById(R.id.dialog_alarm_name);
+            dialogName.setText(alarmName);
+
+            final EditText dialogTime = alarmSetterDialog.findViewById(R.id.hour_dialog_setter);
+            dialogTime.setText(alarmTime);
+
+            final Button dialogDoneButton = alarmSetterDialog.findViewById(R.id.done_dialog_button);
+            dialogDoneButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    alarmSetterDialog.dismiss();
+                    editedAlarm.setTime(dialogTime.getText().toString());
+                    dataBase.alarmDao().update(editedAlarm);
+                    notifyDataSetChanged();
+                }
+            });
+            alarmSetterDialog.show();
         }
-    }
-    public static void dialog(Context context){
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("Configurar alarma")
-                .setTitle(R.string.dialog_title)
-                .setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-        builder.show();
     }
 }
