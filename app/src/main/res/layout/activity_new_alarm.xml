@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/configuration_recycler"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -79,6 +80,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
+        android:padding="@dimen/setter_margin"
         app:layout_constraintBottom_toTopOf="@id/done_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/time_setter">
@@ -87,19 +89,22 @@
             android:id="@+id/name_setter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/setter_margin"
             android:layout_marginTop="@dimen/setter_margin"
-            android:layout_marginEnd="@dimen/setter_margin"
-            android:hint="Name"
+            android:hint="@string/app_name"
             android:imeOptions="actionSend"
             android:inputType="textCapSentences" />
 
+        <Spinner
+            android:id="@+id/alarm_modes"
+            android:layout_marginTop="@dimen/setter_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <LinearLayout
+            android:id="@+id/days_setter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/setter_margin"
             android:layout_marginTop="@dimen/setter_margin"
-            android:layout_marginEnd="@dimen/setter_margin"
             android:gravity="center"
             android:orientation="horizontal">
 

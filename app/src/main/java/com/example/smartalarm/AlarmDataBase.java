@@ -6,8 +6,10 @@ import androidx.room.Dao;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
-@Database(entities = {Alarm.class}, version = 1, exportSchema = false)
+@Database(entities = {Alarm.class}, version = 2, exportSchema = false)
+@TypeConverters({Converters.class})
 public abstract class AlarmDataBase extends RoomDatabase {
     private static AlarmDataBase dataBase;
     private static final String DATABASE_NAME = "alarm_database";

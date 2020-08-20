@@ -38,6 +38,14 @@
     <string name="saturday_char">S</string>
     <string name="sunday_char">S</string>
 
+    <string name="monday_abbreviation">Mon</string>
+    <string name="tuesday_abbreviation">Tue</string>
+    <string name="wednesday_abbreviation">Wed</string>
+    <string name="thursday_abbreviation">Thu</string>
+    <string name="friday_abbreviation">Fri</string>
+    <string name="saturday_abbreviation">Sat</string>
+    <string name="sunday_abbreviation">Sun</string>
+
     <string name="colon">:</string>
     <string name="seconds_default">00</string>
 

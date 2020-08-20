@@ -16,6 +16,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
@@ -49,6 +54,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final TextView alarmNameTextView;
         public final TextView alarmTimeTextView;
+        public final TextView alarmOnDaysTextView;
         public final Switch alarmOnSwitch;
 
         public ViewHolder(@NonNull View itemView) {
@@ -56,6 +62,8 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
             alarmOnSwitch = itemView.findViewById(R.id.on_switch);
             alarmTimeTextView = itemView.findViewById(R.id.hour_item);
             alarmNameTextView = itemView.findViewById(R.id.name_item);
+            alarmOnDaysTextView = itemView.findViewById(R.id.days_item);
+
             itemView.setOnClickListener(this);
         }
 
@@ -63,7 +71,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
             alarmNameTextView.setText(currentAlarm.getName());
             alarmOnSwitch.setChecked(currentAlarm.isOn());
             alarmTimeTextView.setText(currentAlarm.getTime());
-
+            alarmOnDaysTextView.setText(currentAlarm.getWeek().toString());
             alarmOnSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -79,7 +87,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
             final Alarm editedAlarm = alarmList.get(getAdapterPosition());
 
             String alarmName = editedAlarm.getName();
-            String alarmTime = editedAlarm.getTime();
+            String[] alarmTime = editedAlarm.getTime().split(":");
 
             final Dialog alarmSetterDialog = new Dialog(context);
             alarmSetterDialog.setContentView(R.layout.alarm_setter_dialog);
@@ -87,15 +95,17 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
             TextView dialogName = alarmSetterDialog.findViewById(R.id.dialog_alarm_name);
             dialogName.setText(alarmName);
 
-            final EditText dialogTime = alarmSetterDialog.findViewById(R.id.hour_dialog_setter);
-            dialogTime.setText(alarmTime);
+            final EditText dialogHourTime = alarmSetterDialog.findViewById(R.id.hour_dialog_setter);
+            final EditText dialogMinuteTime = alarmSetterDialog.findViewById(R.id.minute_dialog_setter);
+            dialogHourTime.setText(alarmTime[0]);
+            dialogMinuteTime.setText(alarmTime[1]);
 
             final Button dialogDoneButton = alarmSetterDialog.findViewById(R.id.done_dialog_button);
             dialogDoneButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     alarmSetterDialog.dismiss();
-                    editedAlarm.setTime(dialogTime.getText().toString());
+                    editedAlarm.setTime(dialogHourTime.getText()+ ":" + dialogMinuteTime.getText());
                     dataBase.alarmDao().update(editedAlarm);
                     notifyDataSetChanged();
                 }
