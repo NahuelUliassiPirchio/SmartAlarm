@@ -16,6 +16,12 @@ public interface AlarmDao {
     @Query("SELECT * FROM alarm_table")
     List<Alarm> getAll();
 
+    @Query("SELECT * FROM alarm_table WHERE `on` = 1")
+    List<Alarm> getAllOn();
+
+    @Query("SELECT * FROM alarm_table WHERE id = :alarmId")
+    Alarm getAlarmById (int alarmId);
+
     @Update
     void update(Alarm alarm);
 

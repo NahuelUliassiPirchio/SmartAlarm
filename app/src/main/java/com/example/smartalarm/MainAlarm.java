@@ -48,6 +48,7 @@ public class MainAlarm extends Fragment {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 final Alarm deletedAlarm = alarmList.get(viewHolder.getAdapterPosition());
                 final int deletedAlarmPosition = viewHolder.getAdapterPosition();
+                deletedAlarm.cancel(getContext());
                 alarmDataBase.alarmDao().delete(deletedAlarm);
                 alarmList.remove(viewHolder.getAdapterPosition());
                 alarmAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
@@ -57,6 +58,7 @@ public class MainAlarm extends Fragment {
                     public void onClick(View view) {
                         alarmList.add(deletedAlarmPosition, deletedAlarm);
                         alarmDataBase.alarmDao().insert(deletedAlarm);
+                        deletedAlarm.schedule(getContext());
                         alarmAdapter.notifyDataSetChanged();
                     }
                 });

@@ -16,6 +16,7 @@ import java.util.Calendar;
 public class Alarm {
     public static final String NAME = "Alarm.NAME";
     public static final String WEEK = "Alarm.WEEK";
+    public static final String IDENTIFIER = "Alarm.IDENTIFIER";
 
     @PrimaryKey(autoGenerate = true)
     private int ID;
@@ -71,14 +72,20 @@ public class Alarm {
         return week;
     }
 
+    public void setWeek(Week week) {
+        this.week = week;
+    }
+
     public void schedule(Context context) {
         String contextText;
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-        PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, getID(), alarmIntent, 0);
-
+        alarmIntent.putExtra(IDENTIFIER,getID());
         alarmIntent.putExtra(NAME, getName());
-        alarmIntent.putExtra(WEEK, Converters.fromWeekToString(week));
+        String weekString = Converters.fromWeekToString(week);
+        alarmIntent.putExtra(WEEK, weekString);
+
+        PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, getID(), alarmIntent, 0);
 
         String[] alarmTime = getTime().split(":");
         Calendar calendar = Calendar.getInstance();
@@ -97,7 +104,7 @@ public class Alarm {
                     calendar.getTimeInMillis(),
                     alarmPendingIntent
             );
-            contextText = "Alarm " + getName() + "set for" + calendar.get(Calendar.DAY_OF_WEEK) + " at" + time;
+            contextText = "Alarm " + getName() + " set for " + calendar.get(Calendar.DAY_OF_WEEK) + " at" + time;
         } else {
             alarmManager.setRepeating(
                     AlarmManager.RTC_WAKEUP,
@@ -110,5 +117,12 @@ public class Alarm {
         }
         Toast.makeText(context, contextText, Toast.LENGTH_LONG).show();
         isOn = true;
+    }
+    public void cancel(Context context){
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, getID(), intent, 0);
+        alarmManager.cancel(alarmPendingIntent);
+        isOn = false;
     }
 }
