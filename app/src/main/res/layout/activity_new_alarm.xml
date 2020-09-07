@@ -6,74 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".NewAlarm">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <TimePicker
         android:id="@+id/time_setter"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/configuration_recycler"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <EditText
-            android:id="@+id/hour_setter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="2"
-            android:gravity="center"
-            android:inputType="numberDecimal"
-            android:maxLength="2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/minute_setter"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/colon"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/minute_setter"
-            app:layout_constraintStart_toEndOf="@+id/hour_setter"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/minute_setter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="2"
-            android:gravity="center"
-            android:inputType="number"
-            android:maxLength="2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/second_setter"
-            app:layout_constraintStart_toEndOf="@id/hour_setter"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/colon"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/second_setter"
-            app:layout_constraintStart_toEndOf="@+id/minute_setter"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/second_setter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="2"
-            android:gravity="center"
-            android:inputType="number"
-            android:maxLength="2"
-            android:text="@string/seconds_default"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/minute_setter"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/configuration_recycler"
@@ -83,27 +23,28 @@
         android:padding="@dimen/setter_margin"
         app:layout_constraintBottom_toTopOf="@id/done_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/time_setter">
+        app:layout_constraintTop_toBottomOf="@id/time_setter"
+        android:animateLayoutChanges="true">
 
         <EditText
             android:id="@+id/name_setter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/setter_margin"
             android:hint="@string/name"
             android:imeOptions="actionSend"
             android:inputType="textCapSentences" />
 
         <Spinner
             android:id="@+id/alarm_modes"
-            android:layout_marginTop="@dimen/setter_margin"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/setter_margin" />
 
         <LinearLayout
             android:id="@+id/days_setter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_marginTop="@dimen/setter_margin"
             android:gravity="center"
             android:orientation="horizontal">

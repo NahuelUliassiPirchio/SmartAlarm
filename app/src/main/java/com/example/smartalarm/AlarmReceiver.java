@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -15,18 +16,20 @@ import static com.example.smartalarm.Alarm.WEEK;
 public class AlarmReceiver extends BroadcastReceiver {
 
     private Week actualAlarmWeek;
-    private int actualAlarmID;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String actualAlarmWeekString = intent.getStringExtra(WEEK);
-        actualAlarmWeek = Converters.fromStringToWeek(actualAlarmWeekString);
-        actualAlarmID = intent.getIntExtra(IDENTIFIER, 0);
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
             Toast.makeText(context, "Alarm Reboot", Toast.LENGTH_SHORT).show();
             startRescheduleAlarmsService(context);
         } else {
+            String actualAlarmWeekString = intent.getStringExtra(WEEK);
+
+            try{actualAlarmWeek = Converters.fromStringToWeek(actualAlarmWeekString);
             if (actualAlarmWeek.alarmMode() == Week.ONCE) {
+                int actualAlarmID = intent.getIntExtra(IDENTIFIER, 0);
+                Log.e("Facts", String.valueOf(actualAlarmID));
+                Log.e("Facts", actualAlarmWeekString);
                 AlarmDataBase alarmDataBase = AlarmDataBase.getInstance(context);
                 Alarm a = alarmDataBase.alarmDao().getAlarmById(actualAlarmID);
                 a.setOn(false);
@@ -35,6 +38,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 startAlarmService(context, intent);
             } else if (IsToday()) {
                 startAlarmService(context, intent);
+            }}catch (NullPointerException e){
+                startAlarmService(context,intent);
             }
         }
     }

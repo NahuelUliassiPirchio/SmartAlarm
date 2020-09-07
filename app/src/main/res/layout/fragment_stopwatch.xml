@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Stopwatch">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
+
+        <Chronometer
+            android:id="@+id/stopwatch_chronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="60sp"
+            app:layout_constraintBottom_toBottomOf="@+id/chronometer_progressBar"
+            app:layout_constraintEnd_toEndOf="@+id/chronometer_progressBar"
+            app:layout_constraintStart_toStartOf="@+id/chronometer_progressBar"
+            app:layout_constraintTop_toTopOf="@+id/chronometer_progressBar" />
+
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/chronometer_progressBar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="386dp"
+            android:layout_height="352dp"
+            android:background="@drawable/circle_shape"
+            android:indeterminate="false"
+            android:max="60"
+            android:progress="0"
+            android:progressDrawable="@drawable/circle_progress_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+       <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/lap_recycler"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:paddingBottom="@dimen/setter_padding"
+            app:layout_constraintStart_toStartOf="@+id/chronometer_progressBar"
+           app:layout_constraintEnd_toEndOf="@+id/chronometer_progressBar"
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintTop_toBottomOf="@+id/chronometer_progressBar"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/play_pause_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:src="@drawable/ic_play" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/reset_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="75dp"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:src="@drawable/ic_reset"
+        android:visibility="gone"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/lap_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="75dp"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:src="@drawable/ic_lap"
+        android:visibility="gone"/>
+
+</FrameLayout>

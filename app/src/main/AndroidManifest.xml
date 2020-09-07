@@ -14,9 +14,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name=".AlarmService"
+            android:name=".ChronometerService"
             android:enabled="true"
             android:exported="false"></service>
+
+        <activity android:name=".RingingAlarm" />
+
+        <service
+            android:name=".AlarmService"
+            android:enabled="true"
+            android:exported="false" />
 
         <receiver
             android:name=".AlarmReceiver"

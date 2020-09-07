@@ -1,6 +1,7 @@
 package com.example.smartalarm;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,9 +34,7 @@ public class NewAlarm extends AppCompatActivity {
 
         final AlarmDataBase dataBase = AlarmDataBase.getInstance(getApplicationContext());
         Alarm editedAlarm = null;
-
-        final EditText hourSetter = findViewById(R.id.hour_setter);
-        final EditText minuteSetter = findViewById(R.id.minute_setter);
+        final TimePicker timeSetter = findViewById(R.id.time_setter);
         Button doneButton = findViewById(R.id.done_button);
         final EditText alarmNameSetter = findViewById(R.id.name_setter);
 
@@ -58,9 +58,13 @@ public class NewAlarm extends AppCompatActivity {
         if (editedAlarmID != 0) {
             editedAlarm = dataBase.alarmDao().getAlarmById(editedAlarmID);
             alarmNameSetter.setText(editedAlarm.getName());
-            String[] alarmTime = editedAlarm.getTime().split(":");
-            hourSetter.setText(alarmTime[0]);
-            minuteSetter.setText(alarmTime[1]);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                timeSetter.setHour(editedAlarm.getHours());
+                timeSetter.setMinute(editedAlarm.getMinutes());
+            } else {
+                timeSetter.setCurrentHour(editedAlarm.getHours());
+                timeSetter.setCurrentMinute(editedAlarm.getMinutes());
+            }
             newAlarm = false;
 
             int selection = -1;
@@ -86,12 +90,6 @@ public class NewAlarm extends AppCompatActivity {
 
             if (selection != -1)
                 alarmModesSpinner.setSelection(selection);
-
-        } else {
-            //TODO: se ve sincero
-            Calendar calendar = Calendar.getInstance();
-            hourSetter.setText(String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)));
-            minuteSetter.setText(String.valueOf(calendar.get(Calendar.MINUTE)));
         }
 
         alarmModesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -125,7 +123,14 @@ public class NewAlarm extends AppCompatActivity {
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String finalHour = hourSetter.getText().toString().trim() + ":" + minuteSetter.getText().toString().trim();
+                int finalHours, finalMinutes;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    finalHours = timeSetter.getHour();
+                    finalMinutes = timeSetter.getMinute();
+                } else {
+                    finalHours = timeSetter.getCurrentHour();
+                    finalMinutes = timeSetter.getCurrentMinute();
+                }
                 String finalName = alarmNameSetter.getText().toString().trim();
                 Week week;
 
@@ -150,11 +155,12 @@ public class NewAlarm extends AppCompatActivity {
                 );
 
                 if (editedAlarmID == 0) {
-                    Alarm newAlarm = new Alarm(finalHour, finalName, week);
+                    Alarm newAlarm = new Alarm(finalHours, finalMinutes, finalName, week);
                     dataBase.alarmDao().insert(newAlarm);
                     newAlarm.schedule(getApplicationContext());
                 } else {
-                    finalEditedAlarm.setTime(finalHour);
+                    finalEditedAlarm.setHours(finalHours);
+                    finalEditedAlarm.setMinutes(finalMinutes);
                     finalEditedAlarm.setName(finalName);
                     finalEditedAlarm.setOn(true);
                     finalEditedAlarm.setWeek(week);
@@ -174,7 +180,7 @@ public class NewAlarm extends AppCompatActivity {
             else
                 replyIntent.putExtra(EXTRA_REPLY, true);
             setResult(RESULT_OK, replyIntent);
-        } else{
+        } else {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
         finish();

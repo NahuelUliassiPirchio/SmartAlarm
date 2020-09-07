@@ -20,8 +20,10 @@ public class Alarm {
 
     @PrimaryKey(autoGenerate = true)
     private int ID;
-    @ColumnInfo(name = "time")
-    private String time;
+    @ColumnInfo(name = "hours")
+    private int hours;
+    @ColumnInfo(name = "minutes")
+    private int minutes;
     @ColumnInfo(name = "name")
     private String name;
     @ColumnInfo(name = "on")
@@ -29,15 +31,28 @@ public class Alarm {
     @ColumnInfo(name = "week")
     private Week week;
 
-    public Alarm(String time, String name, Week week) {
-        this.time = time;
+    public Alarm(int hours, int minutes, String name, Week week) {
+        this.hours = hours;
+        this.minutes = minutes;
         this.name = name;
         this.isOn = true;
         this.week = week;
     }
 
-    public String getTime() {
-        return time;
+    public int getHours() {
+        return hours;
+    }
+
+    public void setHours(int hours) {
+        this.hours = hours;
+    }
+
+    public int getMinutes() {
+        return minutes;
+    }
+
+    public void setMinutes(int minutes) {
+        this.minutes = minutes;
     }
 
     public String getName() {
@@ -48,9 +63,6 @@ public class Alarm {
         return isOn;
     }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -80,18 +92,18 @@ public class Alarm {
         String contextText;
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-        alarmIntent.putExtra(IDENTIFIER,getID());
+        alarmIntent.putExtra(IDENTIFIER, getID());
         alarmIntent.putExtra(NAME, getName());
         String weekString = Converters.fromWeekToString(week);
         alarmIntent.putExtra(WEEK, weekString);
 
         PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, getID(), alarmIntent, 0);
 
-        String[] alarmTime = getTime().split(":");
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(alarmTime[0]));
-        calendar.set(Calendar.MINUTE, Integer.parseInt(alarmTime[1]));
+        calendar.set(Calendar.HOUR_OF_DAY, hours);
+        calendar.set(Calendar.MINUTE, minutes);
         calendar.set(Calendar.SECOND, 0);
 
         if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
@@ -104,7 +116,7 @@ public class Alarm {
                     calendar.getTimeInMillis(),
                     alarmPendingIntent
             );
-            contextText = "Alarm " + getName() + " set for " + calendar.get(Calendar.DAY_OF_WEEK) + " at" + time;
+            contextText = "Alarm " + getName() + " set for " + calendar.get(Calendar.DAY_OF_WEEK) + " at " + hours + ":" + minutes;
         } else {
             alarmManager.setRepeating(
                     AlarmManager.RTC_WAKEUP,
@@ -112,13 +124,14 @@ public class Alarm {
                     24 * 60 * 60000,
                     alarmPendingIntent
             );
-            String activeDaysString = week.alarmMode() == Week.DAILY ? "daily" : "at " + week.toString();
-            contextText = "Alarm " + getName() + "set " + activeDaysString + " at" + time;
+            String activeDaysString = week.alarmMode() == Week.DAILY ? " daily" : " at " + week.toString();
+            contextText = "Alarm " + getName() + " set " + activeDaysString + " at " + hours + ":" + minutes; //TODO: mejorar toasts
         }
         Toast.makeText(context, contextText, Toast.LENGTH_LONG).show();
         isOn = true;
     }
-    public void cancel(Context context){
+
+    public void cancel(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmReceiver.class);
         PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, getID(), intent, 0);

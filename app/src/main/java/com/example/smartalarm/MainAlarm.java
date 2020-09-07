@@ -1,5 +1,6 @@
 package com.example.smartalarm;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +12,14 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
+import static com.example.smartalarm.MainActivity.TEXT_REQUEST;
 
 public class MainAlarm extends Fragment {
     private List<Alarm> alarmList = new LinkedList<>();
@@ -34,6 +39,15 @@ public class MainAlarm extends Fragment {
         alarmDataBase = AlarmDataBase.getInstance(getContext());
         alarmList = alarmDataBase.alarmDao().getAll();
         final View view = inflater.inflate(R.layout.fragment_main_alarm, container, false);
+
+        FloatingActionButton addFAB = view.findViewById(R.id.add_fab);
+        addFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(new Intent(getContext(), NewAlarm.class), TEXT_REQUEST);
+            }
+        });
+
         RecyclerView alarmRecycler = view.findViewById(R.id.alarm_recycler);
         alarmAdapter = new AlarmAdapter(view.getContext(), alarmList);
         alarmRecycler.setAdapter(alarmAdapter);
@@ -69,11 +83,18 @@ public class MainAlarm extends Fragment {
         return view;
     }
 
-
-
-    public void update() {
-        alarmList.clear();
-        alarmList.addAll(alarmDataBase.alarmDao().getAll());
-        alarmAdapter.notifyDataSetChanged();
+    //TODO: cambiar a livedata
+    @Override
+    public void onActivityResult(int requestCode,
+                                 int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == TEXT_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                if (data.getBooleanExtra(NewAlarm.EXTRA_REPLY, false))
+                    alarmList.clear();
+                    alarmList.addAll(alarmDataBase.alarmDao().getAll());
+                    alarmAdapter.notifyDataSetChanged();
+            }
+        }
     }
 }

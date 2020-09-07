@@ -4,14 +4,15 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,6 +48,11 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
     public int getItemCount() {
         return alarmList.size();
     }
+
+
+
+
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final TextView alarmNameTextView;
         public final TextView alarmTimeTextView;
@@ -66,7 +72,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         void bindTo(final Alarm currentAlarm) {
             alarmNameTextView.setText(currentAlarm.getName());
             alarmOnSwitch.setChecked(currentAlarm.isOn());
-            alarmTimeTextView.setText(currentAlarm.getTime());
+            alarmTimeTextView.setText(currentAlarm.getHours() + ":" + currentAlarm.getMinutes());
             alarmOnDaysTextView.setText(currentAlarm.getWeek().toString());
             alarmOnSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -86,7 +92,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
             final Alarm editedAlarm = alarmList.get(getAdapterPosition());
 
             String alarmName = editedAlarm.getName();
-            String[] alarmTime = editedAlarm.getTime().split(":");
 
             final Dialog alarmSetterDialog = new Dialog(context);
             alarmSetterDialog.setContentView(R.layout.alarm_setter_dialog);
@@ -94,10 +99,15 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
             TextView dialogName = alarmSetterDialog.findViewById(R.id.dialog_alarm_name);
             dialogName.setText(alarmName);
 
-            final EditText dialogHourTime = alarmSetterDialog.findViewById(R.id.hour_dialog_setter);
-            final EditText dialogMinuteTime = alarmSetterDialog.findViewById(R.id.minute_dialog_setter);
-            dialogHourTime.setText(alarmTime[0]);
-            dialogMinuteTime.setText(alarmTime[1]);
+            final TimePicker dialogTimePicker = alarmSetterDialog.findViewById(R.id.dialog_time_editor);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                dialogTimePicker.setHour(editedAlarm.getHours());
+                dialogTimePicker.setMinute(editedAlarm.getMinutes());
+            } else {
+                dialogTimePicker.setCurrentHour(editedAlarm.getHours());
+                dialogTimePicker.setCurrentMinute(editedAlarm.getMinutes());
+            }
+
 
             final Button dialogDoneButton = alarmSetterDialog.findViewById(R.id.done_dialog_button);
             final Button dialogMoreOptionsButton = alarmSetterDialog.findViewById(R.id.more_dialog_button);
@@ -105,7 +115,14 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                 @Override
                 public void onClick(View view) {
                     alarmSetterDialog.dismiss();
-                    editedAlarm.setTime(dialogHourTime.getText()+ ":" + dialogMinuteTime.getText());
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        editedAlarm.setHours(dialogTimePicker.getHour());
+                        editedAlarm.setMinutes(dialogTimePicker.getMinute());
+                    } else {
+                        editedAlarm.setHours(dialogTimePicker.getCurrentHour());
+                        editedAlarm.setMinutes(dialogTimePicker.getCurrentMinute());
+                    }
                     dataBase.alarmDao().update(editedAlarm);
                     editedAlarm.schedule(context);
                     notifyDataSetChanged();
@@ -114,10 +131,10 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
             dialogMoreOptionsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(),NewAlarm.class);
-                    intent.putExtra(IDENTIFIER,editedAlarm.getID());
+                    Intent intent = new Intent(view.getContext(), NewAlarm.class);
+                    intent.putExtra(IDENTIFIER, editedAlarm.getID());
                     context.startActivity(intent);
-                    ((Activity)context).finish();
+                    ((Activity) context).finish();
                 }
             });
             alarmSetterDialog.show();
