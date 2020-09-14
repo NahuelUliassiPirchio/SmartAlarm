@@ -7,31 +7,35 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import static com.example.smartalarm.AlarmService.CHANNEL_ID;
+import static com.example.smartalarm.ChronometerService.CHRONOMETER_BASE;
 import static com.example.smartalarm.ChronometerService.CHRONOMETER_CHANNEL;
-import static com.example.smartalarm.ChronometerService.TYPE_OF_SERVICE;
+import static com.example.smartalarm.ChronometerService.TYPE_OF_CHRONOMETER;
+import static com.example.smartalarm.SmartAlarmReceiver.SMARTALARM_CHANNEL;
+import static com.example.smartalarm.Stopwatch.STOPWATCH;
 
 
 public class MainActivity extends AppCompatActivity {
     public static final int TEXT_REQUEST = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        createChannel();
+        createChannel(CHRONOMETER_CHANNEL);
+        createChannel(SMARTALARM_CHANNEL);
+        createChannel(CHANNEL_ID);
 
         TabLayout mainTabLayout = findViewById(R.id.main_tabLayout);
         final ViewPager2 mainViewPager = findViewById(R.id.main_viewPager);
@@ -73,11 +77,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        int sd = getIntent().getIntExtra(TYPE_OF_SERVICE,0);
-        if (sd!=0){
-            TabLayout.Tab stopwatchTab = mainTabLayout.getTabAt(2);
-            stopwatchTab.select();
-        }
+        /*String typeOfService = getIntent().getStringExtra(TYPE_OF_CHRONOMETER);
+        if (typeOfService != null) {
+            Long chronometerBase = getIntent().getLongExtra(CHRONOMETER_BASE,0);
+            TabLayout.Tab selectedTab = null;
+            switch (typeOfService){
+                case STOPWATCH:
+                    selectedTab = mainTabLayout.getTabAt(2);
+                    mainPagerAdapter.getStopwatchFragment().setChronometerBase(chronometerBase);
+                    break;
+            }
+            selectedTab.select();
+        } TODO:STOPWATCH*/
     }
 
     @Override
@@ -103,12 +114,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void createChannel() {
+    private void createChannel(String channelId) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(CHRONOMETER_CHANNEL, "notification", NotificationManager.IMPORTANCE_HIGH);
+            NotificationChannel notificationChannel = new NotificationChannel(channelId, channelId, NotificationManager.IMPORTANCE_HIGH);
             notificationChannel.enableLights(true);
             notificationChannel.enableVibration(true);
-            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.setLightColor(Color.WHITE);
             NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             manager.createNotificationChannel(notificationChannel);
         }

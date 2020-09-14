@@ -13,10 +13,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver
+            android:name=".ActionNotificationReceiver"
+            android:enabled="true"
+            android:exported="false"></receiver>
+        <receiver
+            android:name=".SmartAlarmReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name=".PhoneLockingListener"
+            android:enabled="true"
+            android:exported="false" />
         <service
             android:name=".ChronometerService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <activity android:name=".RingingAlarm" />
 

@@ -3,6 +3,7 @@ package com.example.smartalarm;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
@@ -12,9 +13,11 @@ import java.util.List;
 
 import static com.example.smartalarm.Alarm.IDENTIFIER;
 import static com.example.smartalarm.Alarm.WEEK;
+import static com.example.smartalarm.SmartAlarmReceiver.SMARTALARM_CHANNEL;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
+    public static final String ALARM_TYPE = "AlarmType";
     private Week actualAlarmWeek;
 
     @Override
@@ -28,7 +31,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             try{actualAlarmWeek = Converters.fromStringToWeek(actualAlarmWeekString);
             if (actualAlarmWeek.alarmMode() == Week.ONCE) {
                 int actualAlarmID = intent.getIntExtra(IDENTIFIER, 0);
-                Log.e("Facts", String.valueOf(actualAlarmID));
+                Log.e("Facts", String.valueOf(actualAlarmID));//TODO: cambiar
                 Log.e("Facts", actualAlarmWeekString);
                 AlarmDataBase alarmDataBase = AlarmDataBase.getInstance(context);
                 Alarm a = alarmDataBase.alarmDao().getAlarmById(actualAlarmID);
@@ -39,6 +42,12 @@ public class AlarmReceiver extends BroadcastReceiver {
             } else if (IsToday()) {
                 startAlarmService(context, intent);
             }}catch (NullPointerException e){
+                if (intent.getStringExtra(ALARM_TYPE)!=null){
+                    if (intent.getStringExtra(ALARM_TYPE).equals(SMARTALARM_CHANNEL)){
+                        Intent phoneLockingService = new Intent(context,PhoneLockingListener.class);
+                        context.stopService(phoneLockingService);
+                    }
+                }
                 startAlarmService(context,intent);
             }
         }

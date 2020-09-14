@@ -3,35 +3,25 @@ package com.example.smartalarm;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.core.widget.ContentLoadingProgressBar;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.core.widget.ContentLoadingProgressBar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Objects;
 
-import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
-
-import static com.example.smartalarm.ChronometerService.CHRONOMETER_BASE;
-import static com.example.smartalarm.ChronometerService.TYPE_OF_SERVICE;
 
 public class Stopwatch extends Fragment {
+    public static final String STOPWATCH = "STOPWATCH_TYPE";
+
     private Chronometer swChronometer;
     private FloatingActionButton playPauseFAB, resetFAB, lapFAB;
     private long pauseOffset;
@@ -63,7 +53,9 @@ public class Stopwatch extends Fragment {
         laps = new ArrayList<>();
         lapStopwatchAdapter = new StopwatchAdapter(laps, getContext());
         lapRecycler.setAdapter(lapStopwatchAdapter);
-        lapRecycler.setLayoutManager(new LinearLayoutManager(fragmentView.getContext()));
+        LinearLayoutManager lapLayoutManager = new LinearLayoutManager(fragmentView.getContext());
+        lapLayoutManager.setReverseLayout(true);
+        lapRecycler.setLayoutManager(lapLayoutManager);
 
         materialProgressBar = fragmentView.findViewById(R.id.chronometer_progressBar);
         swChronometer = fragmentView.findViewById(R.id.stopwatch_chronometer);
@@ -143,12 +135,19 @@ public class Stopwatch extends Fragment {
         lapRecycler.setVisibility(View.VISIBLE);
     }
 
+    public void setChronometerBase (long chronometerBase){
+        swChronometer.setBase(chronometerBase);
+        swChronometer.start();
+    }
+
     @Override
     public void onStop() {
         super.onStop();
-        Intent serviceIntent = new Intent(getContext(),ChronometerService.class);
-        serviceIntent.putExtra(TYPE_OF_SERVICE,"Stopwatch");
-        serviceIntent.putExtra(CHRONOMETER_BASE,swChronometer.getBase());
-        getContext().startService(serviceIntent);
+        /*if (isRunning) {
+            Intent serviceIntent = new Intent(getContext(), ChronometerService.class);
+            serviceIntent.putExtra(TYPE_OF_CHRONOMETER, STOPWATCH);
+            serviceIntent.putExtra(CHRONOMETER_BASE, swChronometer.getBase());
+            getContext().startService(serviceIntent);
+        } TODO: STOPWATCH*/
     }
 }

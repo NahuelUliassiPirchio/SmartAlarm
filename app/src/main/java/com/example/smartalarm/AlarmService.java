@@ -41,7 +41,9 @@ public class AlarmService extends Service {
                 .setContentTitle(alarmName)
                 .setContentIntent(ringPendingIntent)
                 .setSmallIcon(R.drawable.ic_launcher_background)
-                .setContentText("Sape");
+                .setOngoing(true)
+                .setAutoCancel(true)
+                .setContentText("");
         startForeground(1,builder.build());
 
         mediaPlayer.start();

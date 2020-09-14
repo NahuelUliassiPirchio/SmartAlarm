@@ -7,10 +7,15 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class MainPagerAdapter extends FragmentStateAdapter {
     int itemCount;
-
+    Stopwatch stopwatchFragment;
     public MainPagerAdapter(@NonNull FragmentActivity fragmentActivity, int itemCount) {
         super(fragmentActivity);
+        stopwatchFragment = new Stopwatch();
         this.itemCount = itemCount;
+    }
+
+    public Stopwatch getStopwatchFragment() {
+        return stopwatchFragment;
     }
 
     @NonNull
@@ -19,7 +24,7 @@ public class MainPagerAdapter extends FragmentStateAdapter {
         switch (position){
             case 0: return new MainAlarm();
             case 1: return new SmartAlarm();
-            case 2: return new Stopwatch();
+            case 2: return stopwatchFragment;
         }
         return new MainAlarm();
     }
