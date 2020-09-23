@@ -1,5 +1,6 @@
 package com.example.smartalarm;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -14,10 +15,10 @@ public interface AlarmDao {
     void insert(Alarm alarm);
 
     @Query("SELECT * FROM alarm_table")
-    List<Alarm> getAll();
+    LiveData<List<Alarm>> getAll();
 
     @Query("SELECT * FROM alarm_table WHERE `on` = 1")
-    List<Alarm> getAllOn();
+    LiveData<List<Alarm>> getAllOn();
 
     @Query("SELECT * FROM alarm_table WHERE id = :alarmId")
     Alarm getAlarmById (int alarmId);

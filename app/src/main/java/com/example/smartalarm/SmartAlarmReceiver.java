@@ -32,6 +32,8 @@ public class SmartAlarmReceiver extends BroadcastReceiver {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
             calendar.add(Calendar.MINUTE, alarmMinutes);
+            calendar.set(Calendar.SECOND,0);
+            calendar.set(Calendar.MILLISECOND,0);
 
             AlarmManager manager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
             Intent alarmIntent = new Intent(context, AlarmReceiver.class);
@@ -41,7 +43,7 @@ public class SmartAlarmReceiver extends BroadcastReceiver {
                 manager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmPendingIntent);
             } else
                 manager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmPendingIntent);
-            Log.i("Received", String.valueOf(alarmMinutes));
+            Log.i("jjReceived", String.valueOf(alarmMinutes));
         } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
             screenOff = false;
 

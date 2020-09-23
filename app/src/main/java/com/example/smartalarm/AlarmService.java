@@ -4,13 +4,16 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.TimePicker;
 
 import androidx.core.app.NotificationCompat;
+import androidx.preference.PreferenceManager;
 
 import static com.example.smartalarm.Alarm.NAME;
 
@@ -18,10 +21,14 @@ public class AlarmService extends Service {
     public static final String CHANNEL_ID = "ChannelID";
     private MediaPlayer mediaPlayer;
     private Vibrator vibrator;
+    private boolean vibrationSetting;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        SharedPreferences sharedSettings = PreferenceManager.getDefaultSharedPreferences(this);
+        vibrationSetting = sharedSettings.getBoolean("vibration", true);
 
         mediaPlayer = MediaPlayer.create(this, Settings.System.DEFAULT_ALARM_ALERT_URI);
         mediaPlayer.setLooping(true);
@@ -34,24 +41,25 @@ public class AlarmService extends Service {
         String alarmName = intent.getStringExtra(NAME);
 
         Intent ringIntent = new Intent(this, RingingAlarm.class);
-        ringIntent.putExtra(NAME,alarmName);
-        PendingIntent ringPendingIntent = PendingIntent.getActivity(this,1,ringIntent,PendingIntent.FLAG_ONE_SHOT);
+        ringIntent.putExtra(NAME, alarmName);
+        PendingIntent ringPendingIntent = PendingIntent.getActivity(this, 1, ringIntent, PendingIntent.FLAG_ONE_SHOT);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(alarmName)
                 .setContentIntent(ringPendingIntent)
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setOngoing(true)
                 .setAutoCancel(true)
                 .setContentText("");
-        startForeground(1,builder.build());
+        startForeground(1, builder.build());
 
         mediaPlayer.start();
 
-        long[] pattern = { 0, 100, 1000 };
-        vibrator.vibrate(pattern, 0);
+        if (vibrationSetting) {
+            long[] pattern = {0, 100, 1000};
+            vibrator.vibrate(pattern, 0);
+        }
         return START_STICKY;
-
     }
 
     @Override

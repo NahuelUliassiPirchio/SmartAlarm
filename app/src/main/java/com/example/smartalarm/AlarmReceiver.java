@@ -31,8 +31,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             try{actualAlarmWeek = Converters.fromStringToWeek(actualAlarmWeekString);
             if (actualAlarmWeek.alarmMode() == Week.ONCE) {
                 int actualAlarmID = intent.getIntExtra(IDENTIFIER, 0);
-                Log.e("Facts", String.valueOf(actualAlarmID));//TODO: cambiar
-                Log.e("Facts", actualAlarmWeekString);
                 AlarmDataBase alarmDataBase = AlarmDataBase.getInstance(context);
                 Alarm a = alarmDataBase.alarmDao().getAlarmById(actualAlarmID);
                 a.setOn(false);
@@ -90,7 +88,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             @Override
             public void run() {
                 AlarmDataBase dataBase = AlarmDataBase.getInstance(context);
-                List<Alarm> allOnAlarms = dataBase.alarmDao().getAllOn();
+                List<Alarm> allOnAlarms = dataBase.alarmDao().getAllOn().getValue();
                 for (Alarm alarm : allOnAlarms
                 ) {
                     alarm.schedule(context);

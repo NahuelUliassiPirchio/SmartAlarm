@@ -4,20 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SmartAlarm">
+    tools:context=".SmartAlarmFragment">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ToggleButton
-            android:id="@+id/smart_alarm_toggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:contentDescription="temporal"
-             />
+        >
 
         <EditText
             android:id="@+id/smart_hours_setter"
@@ -25,6 +17,28 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:ems="1"
-            android:imeOptions="actionGo" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
+            android:imeOptions="actionGo"
+            app:layout_constraintBottom_toTopOf="@+id/smart_alarm_toggle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/smart_alarm_toggle"
+            android:layout_width="149dp"
+            android:layout_height="122dp"
+            android:background="@drawable/smart_toggle_shape"
+            android:backgroundTint="@color/colorPrimary"
+            android:button="@null"
+            android:foreground="@drawable/smart_toggle"
+            android:foregroundTint="@color/colorAccent"
+            android:foregroundGravity="center"
+
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.widget.Toast;
 
 import androidx.room.ColumnInfo;
@@ -111,7 +112,14 @@ public class Alarm {
         }
 
         if (week.alarmMode() == Week.ONCE) {
-            alarmManager.setExact(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(),alarmPendingIntent),alarmPendingIntent);
+                /*alarmManager.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        calendar.getTimeInMillis(),
+                        alarmPendingIntent
+                );*/
+            }else alarmManager.setExact(
                     AlarmManager.RTC_WAKEUP,
                     calendar.getTimeInMillis(),
                     alarmPendingIntent

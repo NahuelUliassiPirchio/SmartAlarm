@@ -1,13 +1,16 @@
 package com.example.smartalarm;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.util.Log;
-import android.widget.Toast;
 
-import static com.example.smartalarm.SmartAlarm.SMART_ALARM_MINUTES;
+import static com.example.smartalarm.SmartAlarmFragment.SMART_ALARM_MINUTES;
 
 public class PhoneLockingListener extends Service {
     SmartAlarmReceiver smartReceiver;
@@ -32,27 +35,43 @@ public class PhoneLockingListener extends Service {
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(smartReceiver);
-        Log.i("onDestroy Reciever", "Called");
+        Log.i("jjonDestroy Reciever", "Called");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        minutes = intent.getIntExtra(SMART_ALARM_MINUTES,0);
+        minutes = intent.getIntExtra(SMART_ALARM_MINUTES, 0);
         smartReceiver.setAlarmMinutes(minutes);
 
         boolean screenOn = intent.getBooleanExtra("screen_state", false);
         if (!screenOn) {
-            Log.i("screenON", "Called");
-            Log.i("viaService", "CountOn =" + countOn);
+            Log.i("jjscreenON", "Called");
+            Log.i("jjviaService", "CountOn =" + countOn);
 
             //Toast.makeText(getApplicationContext(), "Awake", Toast.LENGTH_LONG).show();
         } else {
-            Log.i("screenOFF", "Called");
-            Log.i("viaService", "CountOff =" + countOff);
+            Log.i("jjscreenOFF", "Called");
+            Log.i("jjviaService", "CountOff =" + countOff);
         }
 
 
         return START_STICKY;
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+
+        Intent restartServiceIntent = new Intent(getApplicationContext(), this.getClass());
+        restartServiceIntent.setPackage(getPackageName());
+        restartServiceIntent.putExtra(SMART_ALARM_MINUTES, minutes);
+
+        PendingIntent restartServicePendingIntent = PendingIntent.getService(getApplicationContext(), 1, restartServiceIntent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmService = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        alarmService.set(
+                AlarmManager.ELAPSED_REALTIME,
+                SystemClock.elapsedRealtime() + 1000,
+                restartServicePendingIntent);
     }
 
     @Override

@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Stopwatch">
+    tools:context=".StopwatchFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true">
 
-        <Chronometer
+        <com.example.smartalarm.Chronometer
             android:id="@+id/stopwatch_chronometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,22 +29,24 @@
             android:layout_height="352dp"
             android:background="@drawable/circle_shape"
             android:indeterminate="false"
-            android:max="60"
+            android:max="590"
             android:progress="0"
+            android:layout_marginTop="16dp"
             android:progressDrawable="@drawable/circle_progress_bar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-       <androidx.recyclerview.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/lap_recycler"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:paddingBottom="@dimen/setter_padding"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/chronometer_progressBar"
             app:layout_constraintStart_toStartOf="@+id/chronometer_progressBar"
-           app:layout_constraintEnd_toEndOf="@+id/chronometer_progressBar"
-           app:layout_constraintBottom_toBottomOf="parent"
-           app:layout_constraintTop_toBottomOf="@+id/chronometer_progressBar"/>
+            app:layout_constraintTop_toBottomOf="@+id/chronometer_progressBar" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -63,7 +65,7 @@
         android:layout_marginStart="75dp"
         android:layout_marginBottom="@dimen/fab_margin"
         android:src="@drawable/ic_reset"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/lap_fab"
@@ -73,6 +75,6 @@
         android:layout_marginEnd="75dp"
         android:layout_marginBottom="@dimen/fab_margin"
         android:src="@drawable/ic_lap"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </FrameLayout>

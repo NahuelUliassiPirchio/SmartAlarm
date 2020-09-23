@@ -1,6 +1,7 @@
 package com.example.smartalarm;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -14,27 +15,28 @@ import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
-import java.util.Calendar;
 
 import static com.example.smartalarm.Alarm.IDENTIFIER;
 import static com.example.smartalarm.Week.CUSTOM;
 import static com.example.smartalarm.Week.DAILY;
 import static com.example.smartalarm.Week.ONCE;
 
-public class NewAlarm extends AppCompatActivity {
-    public static final String EXTRA_REPLY = "com.example.android.twoactivities.extra.REPLY";
-    Intent replyIntent = new Intent();
-    boolean newAlarm = true;
+public class NewAlarmActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_alarm);
+        SharedPreferences sharedSettings = PreferenceManager.getDefaultSharedPreferences(this);
+        String hourFormat = sharedSettings.getString("hours_mode","24");
+        boolean is24HS = hourFormat.equals("24");
+        final TimePicker timeSetter = findViewById(R.id.time_setter);
+        timeSetter.setIs24HourView(is24HS);
 
         final AlarmDataBase dataBase = AlarmDataBase.getInstance(getApplicationContext());
         Alarm editedAlarm = null;
-        final TimePicker timeSetter = findViewById(R.id.time_setter);
         Button doneButton = findViewById(R.id.done_button);
         final EditText alarmNameSetter = findViewById(R.id.name_setter);
 
@@ -65,7 +67,6 @@ public class NewAlarm extends AppCompatActivity {
                 timeSetter.setCurrentHour(editedAlarm.getHours());
                 timeSetter.setCurrentMinute(editedAlarm.getMinutes());
             }
-            newAlarm = false;
 
             int selection = -1;
             Week editedWeek = editedAlarm.getWeek();
@@ -174,15 +175,6 @@ public class NewAlarm extends AppCompatActivity {
     }
 
     public void buttonsListener(View view) {
-        if (newAlarm) {
-            if (view.getId() == R.id.cancel_button)
-                replyIntent.putExtra(EXTRA_REPLY, false);
-            else
-                replyIntent.putExtra(EXTRA_REPLY, true);
-            setResult(RESULT_OK, replyIntent);
-        } else {
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-        }
         finish();
     }
 }

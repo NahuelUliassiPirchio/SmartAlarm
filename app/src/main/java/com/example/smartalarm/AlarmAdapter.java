@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,19 +16,20 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.smartalarm.Alarm.IDENTIFIER;
 
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
-    private final List<Alarm> alarmList;
+    private List<Alarm> alarmList = new ArrayList<>();
     private Context context;
     private AlarmDataBase dataBase;
 
-    public AlarmAdapter(Context context, List<Alarm> alarmList) {
-        this.alarmList = alarmList;
+    public AlarmAdapter(Context context) {
         this.context = context;
     }
 
@@ -49,9 +51,14 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         return alarmList.size();
     }
 
+    public void setAlarmList(List<Alarm> alarmList) {
+        this.alarmList = alarmList;
+        notifyDataSetChanged();
+    }
 
-
-
+    public Alarm getAlarmAt(int position){
+        return alarmList.get(position);
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final TextView alarmNameTextView;
@@ -82,7 +89,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                         currentAlarm.schedule(context);
                     else currentAlarm.cancel(context);
                     dataBase.alarmDao().update(currentAlarm);
-                    notifyDataSetChanged();
                 }
             });
         }
@@ -90,6 +96,10 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         @Override
         public void onClick(View view) {
             final Alarm editedAlarm = alarmList.get(getAdapterPosition());
+
+            SharedPreferences sharedSettings = PreferenceManager.getDefaultSharedPreferences(context);
+            String hourFormat = sharedSettings.getString("hours_mode","24");
+            boolean is24HS = hourFormat.equals("24");
 
             String alarmName = editedAlarm.getName();
 
@@ -100,6 +110,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
             dialogName.setText(alarmName);
 
             final TimePicker dialogTimePicker = alarmSetterDialog.findViewById(R.id.dialog_time_editor);
+            dialogTimePicker.setIs24HourView(is24HS);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 dialogTimePicker.setHour(editedAlarm.getHours());
                 dialogTimePicker.setMinute(editedAlarm.getMinutes());
@@ -131,10 +142,10 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
             dialogMoreOptionsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), NewAlarm.class);
+                    Intent intent = new Intent(view.getContext(), NewAlarmActivity.class);
                     intent.putExtra(IDENTIFIER, editedAlarm.getID());
+                    alarmSetterDialog.dismiss();
                     context.startActivity(intent);
-                    ((Activity) context).finish();
                 }
             });
             alarmSetterDialog.show();

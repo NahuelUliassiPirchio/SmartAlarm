@@ -4,24 +4,24 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import static com.example.smartalarm.AlarmService.CHANNEL_ID;
-import static com.example.smartalarm.ChronometerService.CHRONOMETER_BASE;
 import static com.example.smartalarm.ChronometerService.CHRONOMETER_CHANNEL;
-import static com.example.smartalarm.ChronometerService.TYPE_OF_CHRONOMETER;
 import static com.example.smartalarm.SmartAlarmReceiver.SMARTALARM_CHANNEL;
-import static com.example.smartalarm.Stopwatch.STOPWATCH;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
         createChannel(SMARTALARM_CHANNEL);
         createChannel(CHANNEL_ID);
 
+        Toolbar activityToolbar = findViewById(R.id.main_toolbar);
+        setSupportActionBar(activityToolbar);
+
         TabLayout mainTabLayout = findViewById(R.id.main_tabLayout);
         final ViewPager2 mainViewPager = findViewById(R.id.main_viewPager);
         final MainPagerAdapter mainPagerAdapter = new MainPagerAdapter(this, mainTabLayout.getTabCount());
@@ -47,16 +50,13 @@ public class MainActivity extends AppCompatActivity {
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                 switch (position) {
                     case 0:
-                        tab.setText("Main Alarm");
+                        tab.setIcon(R.drawable.ic_alarm);
                         break;
                     case 1:
-                        tab.setText("Smart Alarm");
-                        /*BadgeDrawable badgeDrawable = tab.getOrCreateBadge();
-                        badgeDrawable.setBackgroundColor(Color.CYAN);
-                        badgeDrawable.setVisible(true);*/
+                        tab.setIcon(R.drawable.ic_brain);
                         break;
                     case 2:
-                        tab.setText("Stopwatch");
+                        tab.setIcon(R.drawable.ic_stopwatch);
                 }
             }
         }).attach();
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_about:
                 break;
             case R.id.action_settings:
-                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);

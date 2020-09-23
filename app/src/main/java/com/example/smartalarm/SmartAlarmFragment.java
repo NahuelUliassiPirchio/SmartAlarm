@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,7 +18,7 @@ import android.widget.ToggleButton;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class SmartAlarm extends Fragment {
+public class SmartAlarmFragment extends Fragment {
 
     private static final String SMART_ALARM_ON = "SmartAlarmOn";
     private SharedPreferences mPreferences;
@@ -25,12 +26,12 @@ public class SmartAlarm extends Fragment {
             "com.example.smartalarm";
 
     EditText hoursSetter;
-    ToggleButton alarmToggle;
+    CheckBox alarmToggle;
 
 
     public static final String SMART_ALARM_MINUTES = "SmartAlarmMinutes";
 
-    public SmartAlarm() {
+    public SmartAlarmFragment() {
     }
 
     @Override
@@ -43,7 +44,7 @@ public class SmartAlarm extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
-        boolean toggleStatement=alarmToggle.isChecked();
+        boolean toggleStatement = alarmToggle.isChecked();
         preferencesEditor.putBoolean(SMART_ALARM_ON, toggleStatement);
         try {
             String alarmMinutesString = hoursSetter.getText().toString().trim();
@@ -63,7 +64,7 @@ public class SmartAlarm extends Fragment {
         alarmToggle = smartAlarmView.findViewById(R.id.smart_alarm_toggle);
 
         if (mPreferences.contains(SMART_ALARM_MINUTES)) {
-            int minutesI =  mPreferences.getInt(SMART_ALARM_MINUTES, 0);
+            int minutesI = mPreferences.getInt(SMART_ALARM_MINUTES, 0);
             hoursSetter.setText(String.valueOf(minutesI));
             alarmToggle.setChecked(mPreferences.getBoolean(SMART_ALARM_ON, false));
         }
