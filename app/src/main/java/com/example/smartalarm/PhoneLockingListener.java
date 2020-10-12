@@ -10,7 +10,8 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
 
-import static com.example.smartalarm.SmartAlarmFragment.SMART_ALARM_MINUTES;
+import static com.example.smartalarm.SmartAlarm.SMART_ALARM_MINUTES;
+
 
 public class PhoneLockingListener extends Service {
     SmartAlarmReceiver smartReceiver;

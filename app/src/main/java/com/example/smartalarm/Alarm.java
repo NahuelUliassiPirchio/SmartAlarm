@@ -4,9 +4,11 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.widget.Toast;
 
+import androidx.preference.PreferenceManager;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -113,18 +115,18 @@ public class Alarm {
 
         if (week.alarmMode() == Week.ONCE) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(),alarmPendingIntent),alarmPendingIntent);
+                alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(), alarmPendingIntent), alarmPendingIntent);
                 /*alarmManager.setExactAndAllowWhileIdle(
                         AlarmManager.RTC_WAKEUP,
                         calendar.getTimeInMillis(),
                         alarmPendingIntent
                 );*/
-            }else alarmManager.setExact(
+            } else alarmManager.setExact(
                     AlarmManager.RTC_WAKEUP,
                     calendar.getTimeInMillis(),
                     alarmPendingIntent
             );
-            contextText = "Alarm " + getName() + " set for " + calendar.get(Calendar.DAY_OF_WEEK) + " at " + hours + ":" + minutes;
+            contextText = "Alarm " + getName() + " set for " + calendar.get(Calendar.DAY_OF_WEEK) + " at " + getFormattedTime(context);
         } else {
             alarmManager.setRepeating(
                     AlarmManager.RTC_WAKEUP,
@@ -133,7 +135,7 @@ public class Alarm {
                     alarmPendingIntent
             );
             String activeDaysString = week.alarmMode() == Week.DAILY ? " daily" : " at " + week.toString();
-            contextText = "Alarm " + getName() + " set " + activeDaysString + " at " + hours + ":" + minutes; //TODO: mejorar toasts
+            contextText = "Alarm " + getName() + " set " + activeDaysString + " at " + getFormattedTime(context); //TODO: mejorar toasts, con formato
         }
         Toast.makeText(context, contextText, Toast.LENGTH_LONG).show();
         isOn = true;
@@ -145,5 +147,29 @@ public class Alarm {
         PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, getID(), intent, 0);
         alarmManager.cancel(alarmPendingIntent);
         isOn = false;
+    }
+
+    public String getFormattedTime(Context context) {
+        SharedPreferences sharedSettings = PreferenceManager.getDefaultSharedPreferences(context); //TODO: SINGLETON
+        String hourFormat = sharedSettings.getString("hours_mode", "24");
+
+        int extraHours = (hours > 12) ? 12 : 0;
+        Integer  minutes = getMinutes();
+        String meridiemPhase = "";
+        String hourString;
+        if (hourFormat.equals("24")) {
+            hourString = String.valueOf(hours);
+        } else {
+            if (extraHours == 12)
+                meridiemPhase = "pm";
+            else meridiemPhase = "am";
+            hourString = String.valueOf(hours - extraHours);
+        }
+
+        String minuteString = String.valueOf(minutes);
+        if (minuteString.length() < 2) //TODO change to format
+            minuteString = "0" + minuteString;
+
+        return hourString + ":" + minuteString + " " + meridiemPhase;
     }
 }

@@ -11,24 +11,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class StopwatchAdapter extends RecyclerView.Adapter<StopwatchAdapter.ViewHolder> {
+public class LapsAdapter extends RecyclerView.Adapter<LapsAdapter.ViewHolder> {
 
     private final ArrayList<String> lapList;
     private Context context;
 
-    public StopwatchAdapter(ArrayList<String> lapList, Context context) {
+    public LapsAdapter(ArrayList<String> lapList, Context context) {
         this.lapList = lapList;
         this.context = context;
     }
 
     @NonNull
     @Override
-    public StopwatchAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public LapsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.lap_view,parent,false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull StopwatchAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull LapsAdapter.ViewHolder holder, int position) {
         holder.lapValueTextView.setText(lapList.get(position));
         holder.lapNumberTextView.setText(String.valueOf(position+1));
         holder.lapNameTextView.setText(String.format("Lap %d",(position+1)));

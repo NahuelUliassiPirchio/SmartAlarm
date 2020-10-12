@@ -7,7 +7,7 @@ import android.os.IBinder;
 
 import androidx.core.app.NotificationCompat;
 
-import static com.example.smartalarm.StopwatchFragment.STOPWATCH;
+import static com.example.smartalarm.Fragments.StopwatchFragment.STOPWATCH;
 
 public class ChronometerService extends Service {
     public static final String TYPE_OF_CHRONOMETER = "ServiceType";

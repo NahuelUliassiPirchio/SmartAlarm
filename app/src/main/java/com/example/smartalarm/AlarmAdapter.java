@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.ParcelUuid;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -24,26 +26,36 @@ import java.util.List;
 
 import static com.example.smartalarm.Alarm.IDENTIFIER;
 
-public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
+public class AlarmAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Alarm> alarmList = new ArrayList<>();
     private Context context;
     private AlarmDataBase dataBase;
+    boolean is24HS;
 
     public AlarmAdapter(Context context) {
         this.context = context;
+        SharedPreferences sharedSettings = PreferenceManager.getDefaultSharedPreferences(context); //TODO: SINGLETON
+        String hourFormat = sharedSettings.getString("hours_mode", "24");
+        is24HS = hourFormat.equals("24");
     }
 
     @NonNull
     @Override
-    public AlarmAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.alarm_view, parent, false));
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == 0) {
+            return new SmartAlarmViewHolder(LayoutInflater.from(context).inflate(R.layout.smartalarm_view, parent, false));
+        }
+        return new AlarmViewHolder(LayoutInflater.from(context).inflate(R.layout.alarm_view, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AlarmAdapter.ViewHolder holder, int position) {
-        Alarm currentAlarm = alarmList.get(position);
-        dataBase = AlarmDataBase.getInstance(context);
-        holder.bindTo(currentAlarm);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof AlarmViewHolder) {
+            Alarm currentAlarm = alarmList.get(position);
+            dataBase = AlarmDataBase.getInstance(context);
+            AlarmViewHolder alarmViewHolder = (AlarmViewHolder) holder;
+            alarmViewHolder.bindTo(currentAlarm);
+        }
     }
 
     @Override
@@ -53,20 +65,27 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
 
     public void setAlarmList(List<Alarm> alarmList) {
         this.alarmList = alarmList;
+        alarmList.add(0, new Alarm(0, 0, "Smart", new Week()));
         notifyDataSetChanged();
     }
 
-    public Alarm getAlarmAt(int position){
+    @Override
+    public int getItemViewType(int position) {
+        return (position == 0) ? 0 : 1;
+    }
+
+    public Alarm getAlarmAt(int position) {
         return alarmList.get(position);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class AlarmViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final TextView alarmNameTextView;
         public final TextView alarmTimeTextView;
         public final TextView alarmOnDaysTextView;
         public final Switch alarmOnSwitch;
 
-        public ViewHolder(@NonNull View itemView) {
+
+        public AlarmViewHolder(@NonNull View itemView) {
             super(itemView);
             alarmOnSwitch = itemView.findViewById(R.id.on_switch);
             alarmTimeTextView = itemView.findViewById(R.id.hour_item);
@@ -77,9 +96,10 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         }
 
         void bindTo(final Alarm currentAlarm) {
+
+            alarmTimeTextView.setText(currentAlarm.getFormattedTime(context));
             alarmNameTextView.setText(currentAlarm.getName());
             alarmOnSwitch.setChecked(currentAlarm.isOn());
-            alarmTimeTextView.setText(currentAlarm.getHours() + ":" + currentAlarm.getMinutes());
             alarmOnDaysTextView.setText(currentAlarm.getWeek().toString());
             alarmOnSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -96,10 +116,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         @Override
         public void onClick(View view) {
             final Alarm editedAlarm = alarmList.get(getAdapterPosition());
-
-            SharedPreferences sharedSettings = PreferenceManager.getDefaultSharedPreferences(context);
-            String hourFormat = sharedSettings.getString("hours_mode","24");
-            boolean is24HS = hourFormat.equals("24");
 
             String alarmName = editedAlarm.getName();
 
@@ -149,6 +165,27 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                 }
             });
             alarmSetterDialog.show();
+        }
+    }
+
+    public class SmartAlarmViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        CheckBox smartCheckBox;
+
+        public SmartAlarmViewHolder(@NonNull View itemView) {
+            super(itemView);
+            smartCheckBox = itemView.findViewById(R.id.smart_alarm_toggle);
+
+            smartCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                }
+            });
+        }
+
+        @Override
+        public void onClick(View v) {
+
         }
     }
 }

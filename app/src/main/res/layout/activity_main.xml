@@ -12,18 +12,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        >
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/main_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary">
+            android:background="?android:attr/colorBackground">
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/main_tabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:tabIconTint="@color/gray"
+                app:tabIndicatorColor="@color/transparent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -31,19 +34,19 @@
                     android:id="@+id/mainAlarm_tab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Main Alarm" />
+                    />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/smartAlarm_tab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Smart Alarm" />
+                    />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/stopwatch_tab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Wednesday" />
+                    />
             </com.google.android.material.tabs.TabLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>

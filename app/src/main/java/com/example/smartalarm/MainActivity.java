@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
@@ -51,12 +53,13 @@ public class MainActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         tab.setIcon(R.drawable.ic_alarm);
+                        tab.getIcon().setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent),PorterDuff.Mode.SRC_IN);
                         break;
                     case 1:
-                        tab.setIcon(R.drawable.ic_brain);
+                        tab.setIcon(R.drawable.ic_stopwatch);
                         break;
                     case 2:
-                        tab.setIcon(R.drawable.ic_stopwatch);
+                        tab.setIcon(R.drawable.ic_brain);
                 }
             }
         }).attach();
@@ -66,10 +69,14 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 int tabPosition = tab.getPosition();
                 mainViewPager.setCurrentItem(tabPosition);
+                int tabIconColor = ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
+                tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+                int tabIconColor = ContextCompat.getColor(getApplicationContext(), R.color.gray);
+                tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
             }
 
             @Override
@@ -106,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 } else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             case R.id.action_about:
+                startActivity(new Intent(this, RingingAlarm.class));
                 break;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));

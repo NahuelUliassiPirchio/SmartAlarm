@@ -4,76 +4,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.StopwatchFragment">
+    tools:context=".Fragments.TimerFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="@dimen/fab_bottom_margin"
         android:animateLayoutChanges="true">
 
-        <com.example.smartalarm.Chronometer
-            android:id="@+id/stopwatch_chronometer"
+        <NumberPicker
+            android:id="@+id/hour_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="60sp"
-            app:layout_constraintBottom_toBottomOf="@+id/chronometer_progressBar"
-            app:layout_constraintEnd_toEndOf="@+id/chronometer_progressBar"
-            app:layout_constraintStart_toStartOf="@+id/chronometer_progressBar"
-            app:layout_constraintTop_toTopOf="@+id/chronometer_progressBar" />
-
-        <androidx.core.widget.ContentLoadingProgressBar
-            android:id="@+id/chronometer_progressBar"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="386dp"
-            android:layout_height="352dp"
-            android:background="@drawable/circle_shape"
-            android:indeterminate="false"
-            android:max="590"
-            android:progress="0"
-            android:layout_marginTop="16dp"
-            android:progressDrawable="@drawable/circle_progress_bar"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/minute_picker"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/minute_picker" />
+
+        <NumberPicker
+            android:id="@+id/minute_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/second_picker"
+            app:layout_constraintStart_toEndOf="@+id/hour_picker"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <NumberPicker
+            android:id="@+id/second_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/minute_picker"
+            app:layout_constraintTop_toTopOf="@id/minute_picker" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/lap_recycler"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/fab_bottom_margin"
             android:layout_marginTop="@dimen/fab_bottom_margin"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/chronometer_progressBar"
-            app:layout_constraintStart_toStartOf="@+id/chronometer_progressBar"
-            app:layout_constraintTop_toBottomOf="@+id/chronometer_progressBar" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/minute_picker" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/play_pause_fab"
+        style="@style/FloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/FloatingActionButton"
         android:src="@drawable/ic_play" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/reset_fab"
+        style="@style/FloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginStart="@dimen/fab_start_margin"
-        style="@style/FloatingActionButton"
         android:src="@drawable/ic_reset"
         android:visibility="gone" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/lap_fab"
+        style="@style/FloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/fab_start_margin"
-        style="@style/FloatingActionButton"
+        android:layout_marginEnd="@dimen/fab_end_margin"
         android:src="@drawable/ic_lap"
         android:visibility="gone" />
-
 </FrameLayout>

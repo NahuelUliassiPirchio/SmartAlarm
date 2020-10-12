@@ -1,25 +1,26 @@
-package com.example.smartalarm;
+package com.example.smartalarm.Fragments;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Chronometer;
 
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.smartalarm.Chrono;
+import com.example.smartalarm.R;
+import com.example.smartalarm.LapsAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 
-public class StopwatchFragment extends Fragment {
+public class StopwatchFragment extends Fragment implements Chrono {
     public static final String STOPWATCH = "STOPWATCH_TYPE";
 
     private com.example.smartalarm.Chronometer swChronometer;
@@ -29,8 +30,8 @@ public class StopwatchFragment extends Fragment {
     private int progress = 0;
     private ContentLoadingProgressBar materialProgressBar;
     private RecyclerView lapRecycler;
-    private ArrayList<String> laps;
-    private StopwatchAdapter lapStopwatchAdapter;
+    private ArrayList<String> laps = new ArrayList<>();
+    private LapsAdapter lapsAdapter;
 
     public StopwatchFragment() {
     }
@@ -50,9 +51,8 @@ public class StopwatchFragment extends Fragment {
         lapFAB = stopwatchView.findViewById(R.id.lap_fab);
 
         lapRecycler = stopwatchView.findViewById(R.id.lap_recycler);
-        laps = new ArrayList<>();
-        lapStopwatchAdapter = new StopwatchAdapter(laps, getContext());
-        lapRecycler.setAdapter(lapStopwatchAdapter);
+        lapsAdapter = new LapsAdapter(laps, getContext());
+        lapRecycler.setAdapter(lapsAdapter);
         lapRecycler.setLayoutManager(new LinearLayoutManager(stopwatchView.getContext()));
 
         materialProgressBar = stopwatchView.findViewById(R.id.chronometer_progressBar);
@@ -75,10 +75,10 @@ public class StopwatchFragment extends Fragment {
                 Drawable fabDrawable;
                 if (isRunning) {
                     fabDrawable = getResources().getDrawable(R.drawable.ic_play, requireActivity().getTheme());
-                    stopChronometer();
+                    stopTimer();
                 } else {
                     fabDrawable = getResources().getDrawable(R.drawable.ic_pause, requireActivity().getTheme());
-                    startChronometer();
+                    startTimer();
                 }
                 playPauseFAB.setImageDrawable(fabDrawable);
             }
@@ -87,7 +87,7 @@ public class StopwatchFragment extends Fragment {
         resetFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                resetChronometer();
+                resetTimer();
             }
         });
 
@@ -101,15 +101,8 @@ public class StopwatchFragment extends Fragment {
         return stopwatchView;
     }
 
-    private void stopChronometer() {
-        swChronometer.stop();
-        pauseOffset = SystemClock.elapsedRealtime() - swChronometer.getBase();
-        resetFAB.setVisibility(View.VISIBLE);
-        lapFAB.setVisibility(View.GONE);
-        isRunning = false;
-    }
-
-    private void startChronometer() {
+    @Override
+    public void startTimer() {
         swChronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
         swChronometer.start();
         resetFAB.setVisibility(View.GONE);
@@ -117,22 +110,35 @@ public class StopwatchFragment extends Fragment {
         isRunning = true;
     }
 
-    public void resetChronometer() {
+    @Override
+    public void stopTimer() {
+        swChronometer.stop();
+        pauseOffset = SystemClock.elapsedRealtime() - swChronometer.getBase();
+        resetFAB.setVisibility(View.VISIBLE);
+        lapFAB.setVisibility(View.GONE);
+        isRunning = false;
+    }
+
+    @Override
+    public void resetTimer() {
         swChronometer.setBase(SystemClock.elapsedRealtime());
         pauseOffset = 0;
         materialProgressBar.setProgress(0);
         laps.clear();
-        lapStopwatchAdapter.notifyDataSetChanged();
+        lapsAdapter.notifyDataSetChanged();
         progress = -1;
+
         resetFAB.setVisibility(View.GONE);
     }
 
-    private void makeLap() {
+    @Override
+    public void makeLap() {
         laps.add(swChronometer.getText().toString());
         lapRecycler.smoothScrollToPosition(laps.size()-1);
-        lapStopwatchAdapter.notifyDataSetChanged();
+        lapsAdapter.notifyDataSetChanged();
         lapRecycler.setVisibility(View.VISIBLE);
     }
+
 
     public void setChronometerBase (long chronometerBase){
         swChronometer.setBase(chronometerBase);

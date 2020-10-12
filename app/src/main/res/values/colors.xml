@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
-    <color name="darkView">#FFF2F1</color>
+    <color name="colorPrimary">#534F4E</color>
+    <color name="colorPrimaryDark">#46444A</color>
+    <color name="colorAccent">#FFF2F1</color>
     <color name="white">#FFF2F1</color>
+    <color name="gray">#6AFFF2F1</color>
     <color name="cancelColor">#FF1200</color>
     <color name="transparent" />
 

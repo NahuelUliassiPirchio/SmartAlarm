@@ -4,7 +4,7 @@
     android:id="@+id/fragment_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainAlarmFragment">
+    tools:context=".Fragments.MainAlarmFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/alarm_recycler"
@@ -13,12 +13,13 @@
         android:layout_height="match_parent">
 
     </androidx.recyclerview.widget.RecyclerView>
+
+    <!--TODO style-->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/fab_margin"
+        style="@style/FloatingActionButton"
         android:src="@drawable/ic_add"
-        android:layout_gravity="center_horizontal|bottom"
         />
 </FrameLayout>
